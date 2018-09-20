@@ -98,7 +98,7 @@
 	#define MSGS2  "\nTHE BEST SCORES."  
 	#define MSGS3  "\nWHAT'S YOUR NAME, PLEASE :\n" 
 	
-	#define MSGHH  8,22,"HOW HIGH CAN YOU GET ?"
+	#define MSGHH  "HOW HIGH CAN YOU GET ?"
 #endif 
 unsigned int temps;
 void plots(char x,char y,const char *msg);
@@ -158,7 +158,7 @@ char ya2[NBREFEUX];
 
 char APS;
 char bonhomme=BONHOMMEDROITE;
-char touche;
+unsigned char touche;
 char NS[20],affs[8];
 char ABS,ARS,ASS;
 char PLS[]="bbb";
@@ -509,8 +509,8 @@ L_Presentation:
 			    plots(13,24,"3...     ");
 				break;
 			case MAXTONNEAUX-4 :			    
-				plots(13,23,"J'OUVRE    ");
-				plots(13,24,"LA GRILLE");
+				plots(13,23,MSG11);
+				plots(13,24,MSG12);
 				break;
 		}
 	}
@@ -1524,19 +1524,20 @@ poke(47013,spritefeu47013[animfeu]);
 
 char touche_action()
  { 
-    touche=key();
+    //touche=key();
+	touche=peek(0x208);
 	switch(touche)
 	{
-		case 0:
+		case 56://0:
 			return 0;
 			break;
-		case ' ':
+		case 132://' ':
 		    if (bonhomme!=BONHOMMESAUT) {
 				if (tableaunum!=3) saut();
 			}
 			return ' ';
 			break;
-		case 'P':
+		case 157://'P':
 			get();
 			return 'P';
 			break;
@@ -1545,7 +1546,7 @@ char touche_action()
 	plot(x,y,APS);
 	switch(touche)
 	{
-		case 'L':
+		case 143://'L':
 		    if ((what_below!=ECHELLE) || (APS!=ECHELLE))
 			{
 		    if ((bonhomme==BONHOMMEGAUCHE)||(bonhomme==BONHOMMESAUT))
@@ -1556,7 +1557,7 @@ char touche_action()
 				else a=1; 
 			}
 			break;
-		case 'K':
+		case 131://'K':
 		    if ((what_below!=ECHELLE) || (APS!=ECHELLE))
 			{
 		    if ((bonhomme==BONHOMMEDROITE)||(bonhomme==BONHOMMESAUT)) 
@@ -1567,13 +1568,15 @@ char touche_action()
 				else a=-1;
 			}
 			break;
-		case 'A':if ((what_above==ECHELLE) || (APS==ECHELLE))
+		case 174: //'A':
+			if ((what_above==ECHELLE) || (APS==ECHELLE))
 			{
 				b=-1; bonhomme=BONHOMMESAUT; a=0;
 			}
 			//b=-4; 
 			break;
-		case 'Z':if (what_below==ECHELLE)
+		case 170:  //'Z':
+			if (what_below==ECHELLE)
 			{
 				b=1; bonhomme=BONHOMMESAUT; a=0;
 			}
