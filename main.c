@@ -10,6 +10,7 @@
 #define TEMPOFEU 10;
 #define TEMPO_OK 1
 #define INITTIMER 65535
+#define TEMPO_KB 4
 
 //temporisation bonus
 #define TEMPOB  200
@@ -125,7 +126,9 @@ char a=0,b=0;
 char a1=0; //dir saut
 char vies=0; //vies
 char ht=0,hauteur=0,t=0,tableaunum=0,otb; //t=0
-unsigned int i=0,j=0,k=0,kk,score=0,saute=0,saut_special=0;
+unsigned int i=0,j=0,k=0,kk,score=0;
+unsigned char saute=0,saut_special=0,saut_autorise=1;
+
 char tempo_tonneaux,nbre_tonneaux,co;
 int bonus=0;
 unsigned int timer1,timer2,timerbonus=0,timerg,timer_feu;
@@ -330,8 +333,13 @@ void main()
 	
 	//presentation
 L_Presentation:
+     
 	text(); cls(); paper(0); ink(7); zap();
 	setflags(SCREEN+NOKEYCLICK);
+	//regular keyboard tempo
+	poke(0x24e,32);
+	poke(0x24f,4);
+	
 	poke(0x020C,0xff); //Caps Lock
 	play(7,0,0,0);
 
@@ -394,12 +402,12 @@ L_Presentation:
 	how_high();
 	timer1=INITTIMER; timer2=TEMPO1/3;	
 	co=0;
-	anim_event=1;
-	
+	anim_event=1;	
 	bonus_event=1;
 	opendoor=1;
 	bonhomme=BONHOMMEDROITE;
     saute=0;
+	saut_autorise=1;
 	if (level>2) {ht=0;} else ht=4;
 	if (level==1) bonus=20; else bonus=30;
 	
@@ -541,6 +549,7 @@ L_Presentation:
  L_tonneaux: 
     if(anim_event==1) 
 	{
+		saut_autorise=1;
 		for(t=0;t<nbre_tonneaux;t++) 
 		{   
 			tonneau_fincourse=0;
@@ -650,6 +659,9 @@ L_Presentation:
      }
 maj_scores:
 	wait(100);
+	//regular keyboard tempo
+	poke(0x24e,32);
+	poke(0x24f,4);
 	t=0;
 	while ((score<=hs[t]) && (t<7)) t++;
 	if (t!=7) 
@@ -697,6 +709,7 @@ tableau2:
 	bonus_event=1;	
 	timer_feu=INITTIMER;
     saute=0;	
+	saut_autorise=1;
 	yb=17;xb=17;ABS=VIDE;bonus=30;
 	bonhomme=BONHOMMEDROITE; 
 	x=10; y=25; APS=VIDE; a1=1;
@@ -872,6 +885,7 @@ tableau3:
 	anim_event=1;
 	bonus_event=1;
     saute=0;	
+	saut_autorise=1;
 	bonus=20; xb=16; yb=5;
 	bonhomme=BONHOMMEDROITE; APS=VIDE; a1=1;
 	an_poutre=0; x_poutre=23; y_poutre=4;
@@ -1144,6 +1158,7 @@ tableau4:
 	timer_feu=INITTIMER;
 	
 	saute=0;
+	saut_autorise=1;
 	anim_event=1;
 	bonus_event=1;	
 	bonus=30;
@@ -1410,6 +1425,8 @@ char affichage_bonus()
 
 void how_high()
 {
+	poke(0x24e,32);
+	poke(0x24f,4);
 	cls(); ink(1);
 	i=15;
 	play(7,0,0,0);
@@ -1441,6 +1458,10 @@ void how_high()
 	play(0,0,0,0);
 	wait(300);
 	ping();
+	
+	//fast keyboard tempo (prepare keyboard for game mode)
+	poke(0x24e,TEMPO_KB);
+	poke(0x24f,TEMPO_KB);
 }
 
 void goal()
@@ -1472,7 +1493,7 @@ void son1()
 	play(0,0,0,0);
 }
  
- void affichage_data()
+ /*void affichage_data()
 { 
 	cls(); ink(7);
 	plots(2,-1,"BONUS:");
@@ -1485,7 +1506,7 @@ void son1()
 	else {gotoxy(20,1); printf("%d00 ",score);}
 	plot(33,13,0); 
 	plot(33,14,0);
-}
+}*/
 
 void chap_par_sac()
 {
@@ -1524,29 +1545,34 @@ poke(47013,spritefeu47013[animfeu]);
 
 char touche_action()
  { 
-    //touche=key();
-	touche=peek(0x208);
+    touche=key();
+	//touche=peek(0x208);
 	switch(touche)
 	{
-		case 56://0:
+		case 0://0 / 56:		
 			return 0;
 			break;
-		case 132://' ':
-		    if (bonhomme!=BONHOMMESAUT) {
-				if (tableaunum!=3) saut();
+		case ' '://' ' / 132:
+		    if ((bonhomme!=BONHOMMESAUT) && (saut_autorise==1)) {
+				if (tableaunum!=3){
+					saut_autorise=0;
+					saut();
+				}
 			}
 			return ' ';
 			break;
-		case 157://'P':
+		case 'P'://'P' /157:
+		    saut_autorise=1;
 			get();
 			return 'P';
 			break;
 	}
+	saut_autorise=1;
 	what_below=scrn(x,y+1);what_above=scrn(x,y-1);
 	plot(x,y,APS);
 	switch(touche)
 	{
-		case 143://'L':
+		case 'L'://143 'L':
 		    if ((what_below!=ECHELLE) || (APS!=ECHELLE))
 			{
 		    if ((bonhomme==BONHOMMEGAUCHE)||(bonhomme==BONHOMMESAUT))
@@ -1557,7 +1583,7 @@ char touche_action()
 				else a=1; 
 			}
 			break;
-		case 131://'K':
+		case 'K'://'K' 131:
 		    if ((what_below!=ECHELLE) || (APS!=ECHELLE))
 			{
 		    if ((bonhomme==BONHOMMEDROITE)||(bonhomme==BONHOMMESAUT)) 
@@ -1568,14 +1594,14 @@ char touche_action()
 				else a=-1;
 			}
 			break;
-		case 174: //'A':
+		case 'A': //'A' 174:
 			if ((what_above==ECHELLE) || (APS==ECHELLE))
 			{
 				b=-1; bonhomme=BONHOMMESAUT; a=0;
 			}
 			//b=-4; 
 			break;
-		case 170:  //'Z':
+		case 'Z':  //'Z' 170:
 			if (what_below==ECHELLE)
 			{
 				b=1; bonhomme=BONHOMMESAUT; a=0;
