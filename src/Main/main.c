@@ -1,4 +1,5 @@
 #include <lib.h>
+#include "lang.h"
 #define plot(X,Y,C) poke(0xBBA8+(X)+(Y)*40,C)
 #define scrn(X,Y) peek(0xBBA8+(X)+(Y)*40)
 
@@ -59,48 +60,6 @@
 #define NBREASCENCEURS  3
 #define NBREFEUX  4
 
-//Language setting for compilation (comment this line for english)
-//#define __FRENCH__
-
-//Locales
-#ifdef __FRENCH__
-//FR
-	#define MSG1FR "Pr!sente"
-	#define MSG01  "Pr!sente"
-	#define MSG02  "Touches :"
-	#define MSG03  "Haut : [A]       Gauche : [K]"
-	#define MSG04  " Bas : [Z]       Droite : [L]"
-	#define MSG05  "Saut : [SPACE]    Pause : [P]"
-	#define MSG06  "PRESSEZ UNE TOUCHE..."
-	#define MSG07  "Cr!dit : Bertrand RAVEL,Tilt #11,1984"
-	
-	#define MSG11  "J'OUVRE    "
-    #define MSG12  "LA GRILLE"
-	
-	#define MSGS1  "\n\nVOUS VENEZ DE REALISER L'UN"  
-	#define MSGS2  "\nDES 7 MEILLEURS SCORES."
-	#define MSGS3  "\nVOTRE NOM S.V.P :\n"
-	
-	#define MSGHH  "JUSQU'OU IREZ-VOUS ?"
-#else
-//EN
-	#define MSG01  "Presents"
-	#define MSG02  "Keys :"
-	#define MSG03  "  Up : [A]         Left : [K]"
-	#define MSG04  "Down : [Z]        Right : [L]"
-	#define MSG05  "Jump : [SPACE]    Pause : [P]"
-	#define MSG06  "PRESS A KEY..."
-	#define MSG07  "Credit : Bertrand RAVEL,Tilt #11,1984"
-	
-	#define MSG11  "I OPEN     "
-    #define MSG12  "THE GATE"
-	
-	#define MSGS1  "\n\nYOU JUST ACHIEVED ONE OF"
-	#define MSGS2  "\nTHE BEST SCORES."  
-	#define MSGS3  "\nWHAT'S YOUR NAME, PLEASE :\n" 
-	
-	#define MSGHH  "HOW HIGH CAN YOU GET ?"
-#endif 
 unsigned int temps;
 void plots(char x,char y,const char *msg);
 
