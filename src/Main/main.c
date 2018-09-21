@@ -545,6 +545,13 @@ L_Presentation:
 			if (scrn(*xxt,(*yyt+1))==ECHELLE){
 				s=rnd(3);
 				if (s==2){ 
+				    if ((*xxt==x) && (*yyt<y)&&(y<=(*yyt+4))){
+						plot(*xxt,*yyt,*oot);
+						*yyt=y;
+						*oot=scrn(*xxt,*yyt);
+						plot(*xxt,*yyt,*ant);
+						goto L_perte;
+					}
 					*aat=-*aat;
 					tonneau_descend();
 				}
@@ -1363,7 +1370,7 @@ void tonneau_descend()
 		*ant+=*aat;
 		if (*ant>TONNEAU4) *ant=TONNEAU1;
 		if (*ant<TONNEAU1) *ant=TONNEAU4;
-	}	
+	} 	
 	*oot=scrn(*xxt,*yyt);
 }
 
@@ -1403,19 +1410,36 @@ void how_high()
 	plot(1,22,ch);
 #ifdef __FRENCH__
 	plots(9,22,MSGHH);
+	plot(7,24,A_FWWHITE);plot(7,25,A_FWWHITE);plot(7,26,A_FWWHITE);
+	plots(14,24,"APPUYEZ SUR");
+	plots(8,25,"N'IMPORTE QUELLE TOUCHE");
+	plots(14,26,"POUR PASSER");
 #else	
 	plots(8,22,MSGHH);
+	plot(7,25,A_FWWHITE);
+    plots(8,25,"PRESS ANY KEY TO SKIP");
 #endif 
+    if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
 	wait(30);
 	music(1,4,2,7); wait(50);
+	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
 	music(1,4,7,7); wait(25);
+	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
 	music(1,4,6,7); wait(50);
+	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
 	music(1,4,9,7); wait(25);
+	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
 	music(1,4,7,7); wait(25);
+	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
 	music(1,4,11,7); wait(30);
+	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
 	music(1,5,2,7); wait(55);
+	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
 	play(0,0,0,0);
-	wait(300);
+	for(i==0;i<=6;i++){
+		if (peek(0x208)!=56) {play(0,0,0,0); ping; return;};
+		wait(50);
+	}
 	ping();
 	
 	//fast keyboard tempo (prepare keyboard for game mode)

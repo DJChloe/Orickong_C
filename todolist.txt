@@ -1,0 +1,4 @@
+ - high score (7 entries, colors)
+ - clean_up the code
+ - increase lvl 2 difficulty
+ - animate little hero running
