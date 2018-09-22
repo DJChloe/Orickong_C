@@ -12,10 +12,10 @@ taptap join .\loader\build\loader.tap+.\titlescreen\build\titlescreen.tap+.\main
 taptap join .\loader\build\loader.tap+.\titlescreen\build\titlescreen.tap+.\main\build\main_fr.tap ".\release\OricKong_fr.tap
 
 ::sets auto start to off for the main program
-taptap autooff 2 release\OricKong_en.tap
-taptap autooff 2 release\OricKong_fr.tap
+.\tools\taptap autooff 2 release\OricKong_en.tap
+.\tools\taptap autooff 2 release\OricKong_fr.tap
 
 ::displays the catalog of the built tapes
-%OSDK%\bin\taptap cat release\OricKong_en.tap
-%OSDK%\bin\taptap cat release\OricKong_fr.tap
+.\tools\taptap cat release\OricKong_en.tap
+.\tools\taptap cat release\OricKong_fr.tap
 pause
