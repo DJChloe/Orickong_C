@@ -30,12 +30,13 @@ Those people are credited with their pseudo appearing in the High-scores.
 * MAXIMUS, who animated Oricgames.com and wrote [an article](http://callmekenneth.pagesperso-orange.fr/edito,en,112,92.html) on the Donky Kong like games available for the Oric computer.
 * KENNETH, who has ressurected [OricGames](http://callmekenneth.pagesperso-orange.fr/) back from the graves. 
 * DBUG, who is the main maintainer of the OSDK, founder of Defence-force.org, and who helped me to fix those two nasty bugs in the OSDK. One of the best demo-maker in the Oric community.
-* ISS who developped the Oricutron emulator
+* XERON who developped the Oricutron emulator
 * SYMOON, who have provided to Oricgames a lot of tape files, and the Oric Kong tape file. 
 * TILT, the magazine, and its team, in which the original game was published.
 
 Special thanks to :
 * Bertrand RAVEL, credited in Tilt as the author of Oric Kong
 * Ibisum for testing and feedback
+* Iss, for, well... I don't remember for what, but he noticed me that Oricutron was from Xeron. And many thanks to his support. 
 * My sons (Hugo, Tom and Eliot) for their support.
 * Github for hosting the project.
