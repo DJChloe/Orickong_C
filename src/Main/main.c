@@ -276,7 +276,7 @@ char HSS[7][16]=
 	"MAXIMUS",
 	"KENNETH",
 	"DBUG",
-	"ISS",
+	"XERON",
 	"SYMOON",
 	"TILT"
 };
