@@ -1,7 +1,7 @@
 # OricKong-C
 OricKong-C is an open source game project created by Chloé Avrillon (aka LadyWasky/Waskol) for the [Oric Atmos 48K computer](https://en.wikipedia.org/wiki/Oric#Oric_Atmos).
 
-OricKong-C is based on the same name type-in BASIC program made by Bertrand RAVEL and published in the french magazine ["Tilt", issue #11, page 49, in 1984](http://www.abandonware-magazines.org/affiche_mag.php?mag=28&num=330&album=ou). Oric Kong is a Donkey Kong clone, with foor colorfull levels.
+OricKong-C is based on the same name type-in BASIC program made by Bertrand RAVEL and published in the french magazine ["Tilt", #11, page 49, in 1984](http://www.abandonware-magazines.org/affiche_mag.php?mag=28&num=330&album=ou). Oric Kong is a Donkey Kong clone, with foor colorfull levels.
 
 OricKong-C is written in C, using the [Oric Software Development Kit (OSDK)](http://osdk.defence-force.org/), a complete cross-development system allowing to create software for the Oric 1, Oric Atmos, and Oric Telestrat computers.
 BASIC, C and a bit of assembly language were used for this project.
