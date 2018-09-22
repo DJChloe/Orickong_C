@@ -92,13 +92,13 @@ char tempo_tonneaux,nbre_tonneaux,co;
 int bonus=0;
 unsigned int timer1,timer2,timerbonus=0,timerg,timer_feu;
 char anim_event,bonus_event;
-int ch=0,ha=0;
-int st=0,cp=0,l=0;
-int c=0,dp=0,yp=0,yb=0,xb=0;
-int iy=0,cb=0,y_poutre=0, x_poutre,an_poutre, xr,what_below=0;what_above=0;
-int sb=0, sd=0, in=0,zx=0;
-char rr=0,np=0,s=0,co=0;
-int opendoor; //cl=0, 
+char ch=0,ha=0;
+char st=0,cp=0,l=0;
+char c=0,dp=0,yp=0;
+char iy=0,cb=0,y_poutre=0, x_poutre,an_poutre, xr,what_below=0;what_above=0;
+char sb=0, sd=0, in=0,zx=0;
+char rr=0,np=0,s=0,co=0,yb=0,xb=0,dfeu=0;
+char opendoor; //cl=0, 
 
 
 //tonneaux
@@ -117,6 +117,7 @@ char ya[NBREASCENCEURS];
 char *xxa,*yya;
 char xa2[NBREFEUX];
 char ya2[NBREFEUX];
+char dirfeu[NBREFEUX];
 
 char APS;
 char bonhomme=BONHOMMEDROITE;
@@ -290,7 +291,7 @@ void main()
 	
 	
 	
-	//presentation
+//presentation
 L_Presentation:
      
 	text(); cls(); paper(0); ink(7); zap();
@@ -320,10 +321,10 @@ L_Presentation:
 	plot(27,-1,A_FWRED); plot(30,-1,A_FWWHITE);
 	plot(0,0,A_BGBLUE);
 	plots(16,0,MSG01);
-	plot(1,7,A_FWYELLOW); //1,11
-	plot(2,7,A_STD2HFL); //2,11
+	plot(1,7,A_FWYELLOW);
+	plot(2,7,A_STD2HFL); 
 	plots(14,7,ORICKONG);
-	plot(1,8,A_FWYELLOW);//1,12
+	plot(1,8,A_FWYELLOW);
 	plot(2,8,A_STD2HFL);
 	plots(14,8,ORICKONG);
 	for (i=48441;i<=48681;i+=40) poke(i,A_FWGREEN);
@@ -336,8 +337,7 @@ L_Presentation:
 	plots(2,26,MSG07);
 	
 	get();
-	for (i=48000;i<=48039;i++) poke(i,A_BGBLACK);
-	
+	memset((unsigned char*)48000, A_BGBLACK, 40);
 	memcpy((unsigned char*)46856,redefchar,208);
 	memcpy((unsigned char*)46808,redefchar2,48);
 	
@@ -353,13 +353,16 @@ L_Presentation:
 	poke(ADDR1TAPIS2,spritetapis[2]);
 	poke(ADDR2TAPIS2,spritetapis[0]);
 	score=0;
+	
+ //for testing
+ //goto tableauX;
 
  // *** TABLEAU 1 ***
  tableau1:
     doke(0x0276,INITTIMER);
 	tableaunum=1;
 	how_high();
-	timer1=INITTIMER; timer2=TEMPO1/3;	
+	timer1=INITTIMER; timer2=TEMPO1/4;	
 	co=0;
 	anim_event=1;	
 	bonus_event=1;
@@ -371,47 +374,7 @@ L_Presentation:
 	if (level==1) bonus=20; else bonus=30;
 	
 	x=9;y=25;APS=VIDE; nbre_tonneaux=0; a1=1;
-    /* affichage_data();
-	plot(x,y,bonhomme);
-	
-	plot(12,25,A_FWGREEN);
-	plot(12,24,A_FWGREEN);
-	plot(12,23,A_FWGREEN);
-	plot(11,25,PORTE);
-	plot(11,24,PORTE);
-	plot(11,23,PORTE);
-	plot(10,25,A_FWRED);
-	plot(10,24,A_FWRED);
-	plot(10,23,A_FWRED);
-	plots(13,23,"ATTENDEZ...");
-	
-	//for (i=26,j=1040;i>=6;i-=4, j-=160)
-	for (i=1040;i>=240;i-=160)
-	{
-		poke(48042+i,A_FWRED); poke(48002+i,A_FWGREEN); 
-		poke(47962+i,A_FWGREEN); poke(47922+i,A_FWGREEN);		
-		memset((unsigned char*)48046+i, 'b', 25);
-	}
-	
-	
-	plot(2,4,A_FWYELLOW); plot(2,5,A_FWYELLOW); 
-	plots(6,4,DKTOP); plots(6,5,DKBOT);
-	plot(9,4,A_FWGREEN); plot(9,5,A_FWGREEN);
-	for (i=22;i<=25;i++) plot(28,i,ECHELLE);
-	for (i=18;i<=21;i++){ plot(8,i,ECHELLE); plot(18,i,ECHELLE);}
-	for (i=14;i<=17;i++){ plot(21,i,ECHELLE); plot(28,i,ECHELLE);}
-	for (i=10;i<=13;i++){ plot(8,i,ECHELLE); plot(14,i,ECHELLE);}
-	for (i=6;i<=9;i++) 	plot(28,i,ECHELLE);
-	for (i=3;i<=5;i++){ plot(10,i,ECHELLE); plot(12,i,ECHELLE); plot(20,i,ECHELLE);}
 
-	plot(9,2,A_FWRED); 
-	//plots(10,2,"bbbbbbbbbbh");
-	memset((unsigned char*)48130, SOL, 10); plot(20,2,ECHELLE);
-	plot(33,3,BONHOMMEDROITE); 
-	plot(14,1,PRINCESSE);
-	
-	plot(34,13,A_STD2H); plots(35,13,"100");
-	plot(34,14,A_STD2H); plots(35,14,"100"); */
 	file_unpack((unsigned char*)48000,screen1);
 #ifndef __FRENCH__
 	plots(13,23,"WAIT...    ");
@@ -420,15 +383,17 @@ L_Presentation:
 	//init tonneaux
 	co=0;
 	tempo_tonneaux=rnd(8)+6;
-	for(i=0;i<MAXTONNEAUX;i++){
-		xt[i]=9;yt[i]=5;at[i]=1; ot[i]=2;
-		animt[i]=TONNEAU1;
-	}
+	
+	memset(&xt, 9, MAXTONNEAUX);
+	memset(&yt, 5, MAXTONNEAUX);
+	memset(&at, 1, MAXTONNEAUX);
+	memset(&ot, 2, MAXTONNEAUX);
+	memset(&animt, TONNEAU1, MAXTONNEAUX);
 	cp=0;
 	nbre_tonneaux=1;
 	
 	// == ACTION ==
- L250:
+ LDebut1:
  
     timerg=deek(0x0276);
 	if (timer1>=timerg) 
@@ -460,19 +425,19 @@ L_Presentation:
 					plots(10,i,"   ");
 					wait(30);
 				}
-				plots(13,24,"    ");
+				//plots(13,24,"    ");
+				memset((unsigned char*)49013,VIDE,4);
 				timer2=TEMPO1/level;
 				break;
 			case MAXTONNEAUX-1 :
-				//plots(10,24,"   ");
 				plots(13,24,"1...");
 				break;
 			case MAXTONNEAUX-2 :
-			    //plots(10,23,"   ");
-				plots(13,24,"2...");
+			    plots(13,24,"2...");
 				break;
 			case MAXTONNEAUX-3 :
-			    plots(13,23,"           ");
+			    //plots(13,23,"           ");
+				memset((unsigned char*)48973,VIDE,11);
 			    plots(13,24,"3...     ");
 				break;
 			case MAXTONNEAUX-4 :			    
@@ -480,29 +445,30 @@ L_Presentation:
 				plots(13,24,MSG12);
 				break;
 		}
-	}
-		
+	}		
 	if (nbre_tonneaux<MAXTONNEAUX) goto L_tonneaux;
+	
 	if (saute==1){
 	   if(anim_event==1) {
 		   rr=fin_saut();
 		   if (rr==OUCH) goto L_perte;
 		   if (rr==ENDLEVEL) goto L_fin;
 	   }
-	   goto L250;
+	   goto LDebut1;
 	}
 	a=0; b=0;
 	touche_action();
 	
+	//collision joueur
 	if ((APS>=TONNEAU1)&&(APS<=TONNEAU4)) goto L_perte;
 	if ((y==5) && (x<16)) goto L_Presentation;
 	if (scrn(x,y+1)==VIDE) goto L_Chute;
+	//fin	
+	
 	if (y==1) { 	  
 	  goal(); goto tableau2;};
 	if (a!=0) a1=a;
 	a=0;b=0;
-	//co=co+1;
-	//if (co==5) { co=0; timer2=TEMPO1; goto L250; };
     
 	// ==  TONNEAUX  ==
  L_tonneaux: 
@@ -552,8 +518,11 @@ L_Presentation:
 						plot(*xxt,*yyt,*ant);
 						goto L_perte;
 					}
-					*aat=-*aat;
-					tonneau_descend();
+					if (!((noot>=TONNEAU1)&&(noot<=TONNEAU4)))
+					{
+						*aat=-*aat;
+						tonneau_descend();
+					}
 				}
 			};	
 			
@@ -572,7 +541,7 @@ L_Presentation:
 			if (cp>tempo_tonneaux) {cp=0; tempo_tonneaux=rnd(8)+6; nbre_tonneaux+=1;};
 		}
 	};	
-	goto L250;
+	goto LDebut1;
 	
  L_perte:
 	// *** PERTE ***
@@ -600,9 +569,11 @@ L_Presentation:
 	a=0;b=0;t=0;bonhomme=BONHOMMEDROITE;
 	vies-=1;
 	if (vies==0){
-		plots(14,11,"           ");
+		//plots(14,11,"           ");
+		memset((unsigned char*)48494, ' ', 11);
 		plots(14,12," GAME OVER ");
-		plots(14,13,"           ");
+		//plots(14,13,"           ");
+		memset((unsigned char*)48574, ' ', 11);
 		goto maj_scores;
 	}
 	switch(tableaunum)
@@ -654,11 +625,11 @@ maj_scores:
 		for (j=0;j<5-strlen(itoa(hs[i]));j++) affs[j]=' ';
 		affs[j]=0;
 		strcat(affs,itoa(hs[i]));		
-		printf("-%d- %s00    %s\n\n",i,affs,HSS[i]);
+		printf("-%d- %s00    %s\n\n",i+1,affs,HSS[i]);
 	}
 	
-	for (i=0;i<4;i++){
-		plot(1,2*i+4,i);
+	for (i=0;i<7;i++){
+		plot(1,2*i+4,i+1);
 	}
 	wait(200);
 	plots(2,23,MSG06);
@@ -667,71 +638,27 @@ maj_scores:
 
 // *** TABLEAU 2 ***
 tableau2:
+    //Il faut ramasser le chapeau pour afficher les échelles
 	doke(0x0276,INITTIMER);
-	tableaunum=2; dp=6; yp=21; 
+	tableaunum=2;  
 	how_high(); 
+	dp=6; yp=21;
 	timer1=INITTIMER; timer2=TEMPO2/level;
 	anim_event=1;
 	bonus_event=1;	
 	timer_feu=INITTIMER;
+	
+	dfeu=-1;
     saute=0;	
 	saut_autorise=1;
 	yb=17;xb=17;ABS=VIDE;bonus=30;
 	bonhomme=BONHOMMEDROITE; 
 	x=10; y=25; APS=VIDE; a1=1;
 	animtapis=0;
-	
-	/* affichage_data();
-	plot(x,y,bonhomme);
-	plot(33,3,BONHOMMEDROITE);
-	ink(7);
-	plot(1,26,A_FWRED); plot(1,18,A_FWRED);
-	
-	memset((unsigned char*)49086, SOL, 24);
-	memset((unsigned char*)48766, SOL, 24);
-	plot(1,10,A_FWYELLOW); plot(1,14,A_FWYELLOW); plot(1,22,A_FWYELLOW); 
-		
-	memset((unsigned char*)48446, SOL2, 24);
-	
-	memset((unsigned char*)48926, TAPIS1, 24);
-	memset((unsigned char*)48606, TAPIS1, 10);
-	memset((unsigned char*)48620, TAPIS1, 10);
-	plot(11,18,VIDE); plot(23,18,VIDE); 
-	for (i=14;i<=17;i++){
-		plot(14,i,ECHELLE); plot(21,i,ECHELLE); 
-		plot(8,i,ECHELLE); plot(27,i,ECHELLE);
-	}
-	for (i=22;i<=25;i++){
-		plot(14,i,ECHELLE); plot(21,i,ECHELLE); 
-		plot(8,i,ECHELLE); plot(27,i,ECHELLE);
-	}
-	plots(17,14,"=="); plot(5,14,TAPISGAUCHE); 
-	plot (16,14,TAPISDROITE); plot (19,14,TAPISGAUCHE);
-	plot(30,14,TAPISDROITE); plot(5,22,TAPISGAUCHE); plot(30,22,TAPISDROITE); 
-	for (i=18;i<=20;i++){
-		plot(12,i,ECHELLE); plot(22,i,ECHELLE);
-	}
-	plot(17,25,SAC); plot(12,17,CHAPEAU); plot(29,17,PARAPLUIE); 
-	for (i=11;i<=12;i++){
-		plot(7,i,ECHELLE); plot(28,i,ECHELLE);
-	}
-	plot(1,8,A_FWRED); plot(1,9,A_FWRED); plots(8,8,DKTOP);
-	plots(8,9,DKBOT); plot(11,8,A_FWWHITE); plot(11,9,A_FWWHITE); 
-	for (i=6;i<=9;i++){
-		plot(12,i,ECHELLE); plot(14,i,ECHELLE);
-	}
-	plot(1,5,A_FWRED); plots(12,5,"b b"); 
-	for (i=8;i<=9;i++){
-		plot(20,i,ECHELLE);
-	}
-	plot(13,7,A_FWRED); plots(15,7,"bbbbbb"); 
-	plot(17,6,PRINCESSE);plots(17,13,"tt"); 
-	
-	plot(34,13,A_STD2H); plots(35,13,"500");
-	plot(34,14,A_STD2H); plots(35,14,"500"); */
+
 	file_unpack((unsigned char*)48000,screen2);
 	plots(35,3,itoa(vies));
-L3200:
+LDebut2:
 	timerg=deek(0x0276);
 	
 	if (timer1>=timerg) 
@@ -755,52 +682,48 @@ L3200:
 	} 
 	
 	if (saute!=1) plot(x,y,bonhomme);
-	if (saute==1){
+	else {
 	   if(anim_event==1) {
 		   rr=fin_saut();
 		   if (rr==OUCH) goto L_perte;
 		   if (rr==ENDLEVEL) goto L_fin;
 	   }
-	   goto L3200;
-	}
+	   goto LDebut2;
+	}  
 	if (score==0) plots(20,0,"0        ");	
 	else {gotoxy(20,1); printf("%d00 ",score);}
 	
 	touche_action();	
-	if(anim_event==1) 
+	
+Laction2:
+    if(anim_event==1) 
 	{
+		saut_autorise=1;
 		//bonhomme sur le tapis
 		if ((y==21) && (iy==1)) {
-			plot(x,y,VIDE); x+=1; iy=0 ; goto L3220;
+			plot(x,y,VIDE); x+=1; iy=0 ; goto Laction2;
 		}
 		if ((y==13) && (x>18)){
-			plot(x,y,VIDE); x-=1; iy=0 ; goto L3220;
+			plot(x,y,VIDE); x-=1; iy=0 ; goto Laction2;
 		}
 		if ((y==13) && (x<17)){
 			plot(x,y,VIDE); x+=1;
 		}
 		iy=1;
-	}
-L3220:
-
+	} 
 	//collisions joueur
-	s=scrn(x,y);
-	if ((s==PARAPLUIE)||(s==CHAPEAU)||(s==SAC)) chap_par_sac();
-	if (y==5){
-		y=6;
+	if ((APS==PARAPLUIE)||(APS==CHAPEAU)||(APS==SAC)) chap_par_sac();
+	if (y==6){
 		goal();
 		goto tableau3;
-	}	
+	}
+	if ((scrn(x,y+1)==VIDE)&&(APS!=ECHELLE)) goto L_Chute;
+	if ((APS==FEU)||(APS==GATEAU)) goto L_perte;
 	
-	
-	//nouvelle version
-	if (scrn(x,y+1)==VIDE) goto L_Chute;
-	//fin
-	if (s==FEU) goto L_perte;
 	
 	if(anim_event==1) 
 	{
-		
+		//saut_autorise=1;
 		//deplacement gateau (ou crotte ???)
 		if (dp>29) {
 			dp=6; yp=21 ; plot(30,21,VIDE);
@@ -811,10 +734,10 @@ L3220:
 		plot(dp,yp,GATEAU);
 		
 		//deplacement FEU
-		s=rnd(2); if (s==0) s=-1;
+		if(rnd(3)==0) dfeu=-dfeu;
 		plot(xb,yb,ABS);
-		xb=xb+s;
-		if ((xb<12) || (xb>22))xb=xb-s;
+		xb=xb+dfeu;
+		if ((xb<12) || (xb>22)){dfeu=-dfeu; xb=xb+dfeu;}
 		sb=scrn(xb,yb);
 		if ((sb!=VIDE) && (sb!=ECHELLE) && (sb!=CHAPEAU)) goto L_perte;
 		ABS=scrn(xb,yb);
@@ -833,21 +756,23 @@ L3220:
 		animtapis+=1;
 		if(animtapis>2) animtapis=0;
 		
-		plot(x,y,bonhomme);
+		//plot(x,y,bonhomme);
 	}
-	goto L3200;
+	goto LDebut2;
 
 // *** TABLEAU 3 ***
 //Il faut ramasser la CHAPEAU pour afficher les echelles
-//Mais oublié dans jeu original	(celà dit, mal placé)
 
 tableau3:	
 	doke(0x0276,INITTIMER);
-	tableaunum=3; x=4; y=22; how_high();
+	tableaunum=3; 
+	how_high();
+	x=4; y=22; 
 	saut_special=0;
 	timer1=INITTIMER; timer2=TEMPO3;
 	if (level>1) timer2=TEMPO3/2;
 	timer_feu=INITTIMER;
+	dfeu=1;
 	anim_event=1;
 	bonus_event=1;
     saute=0;	
@@ -859,69 +784,9 @@ tableau3:
 	for (i=0;i<NBREASCENCEURS;i++) xa[i]=15;
 	ya[0]=14; ya[1]=18; ya[2]=22;
 	
-	/* affichage_data();
-	
-	plot(x,y,bonhomme);
-	plot(33,3,BONHOMMEDROITE); 
-	ink(3); plot(1,0,A_FWWHITE);
-	for (i=8;i<=24;i++){
-		plot(7,i,A_FWRED); plot(10,i,A_FWYELLOW); plot(14,i,A_FWRED);
-	}
-	plot(1,26,A_FWRED);
-	memset((unsigned char*)49086, SOL, 27);
-	plot(1,23,A_FWRED);
-	plots(4,23,PLS); plots(18,23,PLS);
-	plot(1,12,A_FWRED); plot(1,18,A_FWRED);
-	plots(4,12,PLS); plots(4,18,PLS);
-	memset((unsigned char*)48284, SOL, 19);
-	plot(1,6,A_FWRED);
-	for (i=6;i<=9;i++) plot(23,i,ECHELLE);
-	plots(11,12,"hbh"); plots(11,20,PLS); plot(10,20,A_FWRED);
-	for (i=13;i<=19;i++) plots(11,i,"h h");
-	
-	plot(1,11,A_FWRED); plots(19,11,PLS); plots(28,20,PLS);
-	
-	plots(22,22,B2S); plots(25,21,B2S); 
-	plots(23,15,B2S); plots(20,14,B2S);
-	plots(23,10,B2S);
-	plots(26,9,B2S); plots(29,8,B2S); 
-	plots(26,16,B2S); plots(29,17,B2S);
-	for (i=8;i<=12;i++) plot(29,i,ECHELLE);
-	plots(26,13,"bbbbb");	
-	for (i=18;i<=22;i++) plot(5,i,ECHELLE);
-	for (i=12;i<=17;i++) plot(6,i,ECHELLE);
-	for (i=17;i<=19;i++) plot(29,i,ECHELLE);
-	plot(28,8,A_FWRED); plot(25,9,A_FWRED); plot(22,10,A_FWRED);
-	plot(25,13,A_FWRED); plot(25,16,A_FWRED); plot(28,17,A_FWRED);
-	plot(21,22,A_FWRED); plot(24,21,A_FWRED); 
-	plot(22,15,A_FWRED); plot(19,14,A_FWRED);
-	for (i=9;i<=11;i++) plot(28,i,A_FWYELLOW);
-	plot(19,12,A_FWYELLOW);
-	plot(25,15,A_FWYELLOW); plot(25,14,A_FWYELLOW);
-	
-	plots(8,7,BAS); plots(15,7,BAS);
-	plots(8,25,BAS); plots(15,25,BAS);
-	plots(6,4,DKTOP); plots(6,5,DKBOT);
-	for (i=3;i<=5;i++) plots(11,i,"h h");
-	plot(19,4,ECHELLE); plot(19,5,ECHELLE);
-	plots(14,3,"bbbbbh");
-	plot(12,3,A_FWRED);
-	plot(29,7,SAC); plot(4,11,PARAPLUIE); plot(12,19,CHAPEAU);
-	plot(16,2,PRINCESSE); plot(x,y,bonhomme);
-	for (i=8;i<=24;i++){
-		plot(9,i,CABLE); plot(16,i,CABLE);
-	}
-	plot(22,8,A_FWYELLOW); plot(22,9,A_FWYELLOW);
-	plot(25,18,A_FWYELLOW); plot(25,19,A_FWYELLOW);
-	plot(19,13,A_FWYELLOW); plot(22,13,A_FWRED);
-	plot(10,12,A_FWRED);
-	plot(34,13,A_STD2H); plots(35,13,"500");
-	plot(34,14,A_STD2H); plots(35,14,"500"); */
-	
-	file_unpack((unsigned char*)48000,screen3);
+    file_unpack((unsigned char*)48000,screen3);
 	plots(35,3,itoa(vies));
-	// *** ASCENSEURS ***
-L_ascenseurs:
+LDebut3:
 	timerg=deek(0x0276);
 	if (timer1>=timerg) 
 	{		
@@ -944,17 +809,24 @@ L_ascenseurs:
 	} 
 	
 	if (saute!=1) plot(x,y,bonhomme);
-	if (saute==1){
+	else 
+	{
 	   if(anim_event==1) {
 		   rr=fin_saut_3eme();
 		   if (rr==PERDU) goto L_Chute;
 	   }
-	   goto L_ascenseurs;
+	   goto LDebut3;
 	}
 	
+	//actions joueur
+	
+	if (score==0) plots(20,0,"0        ");	
+	else {gotoxy(20,1); printf("%d00 ",score);}
+	
+	
 	if(anim_event==1) 
-	{		
-		//deplacement ascenceur
+	{	
+        //deplacement ascenceur
 		for (i=0;i<NBREASCENCEURS;i++)
 		{
 			xxa=&xa[i];
@@ -1013,15 +885,30 @@ L_ascenseurs:
 		if ((sb==BONHOMMEDROITE) || (sb==BONHOMMEGAUCHE)) goto L_perte;
 		ARS=scrn(x_poutre,y_poutre);
 		plot(x_poutre,y_poutre,POUTRE);
+	}
+	
+	if (touche_action()==' ')
+	{
+		if ((bonhomme!=BONHOMMESAUT) && (saut_autorise==1)) {
+			saut_autorise=0;
+			saut_3eme();
+			goto LDebut3;
+		}
+	}
+	
+    //collisions joueur
+	if ((APS==PARAPLUIE) || (APS==CHAPEAU) || (APS==SAC)) chap_par_sac();
+	if ((APS==FEU) || (APS==POUTRE)) 
+		goto L_perte;	
 		
-		
-				
+	if(anim_event==1) 
+	{	
+        saut_autorise=1;			
 		//deplacement FEU
-		s=rnd(2);
-		if (s==0) s=-1;
+		if(rnd(3)==0) dfeu=-dfeu;
 		plot(xb,yb,ABS);
-		xb+=s;
-		if ((xb<15) || (xb>22)) xb-=s;
+		xb=xb+dfeu;
+		if ((xb<15) || (xb>22)) {dfeu=-dfeu; xb=xb+dfeu;}
 		sb=scrn(xb,yb);
 		if ((sb!=VIDE) && (sb!=ECHELLE)) goto L_perte;
 		ABS=scrn(xb,yb);
@@ -1031,78 +918,11 @@ L_ascenseurs:
 			goto L_perte;
 	}	
 	
-	
-	//actions joueur
-	
-	if (score==0) plots(20,0,"0        ");	
-	else {gotoxy(20,1); printf("%d00 ",score);}
-	
-	switch(touche_action())
-	{
-		case 0:
-			goto L5900;
-			break;
-		case ' ':
-			if (bonhomme!=BONHOMMESAUT) {
-				saut_3eme();
-				goto L_ascenseurs;
-			}
-			break;
-	}
-		
-	/*
-	
-	touche=key();
-	if (touche==0) goto L5900;
-	what_below=scrn(x,y+1);what_above=scrn(x,y-1);
-	if ((touche=='L') && ((what_below!=ECHELLE) || (APS!=ECHELLE)))
-	{
-		if ((bonhomme==BONHOMMEGAUCHE)||(bonhomme==BONHOMMESAUT)) 
-			{
-				bonhomme=BONHOMMEDROITE;
-				a=0; a1=1;
-			}
-		else a=1;
-	}
-	if ((touche=='K') && ((what_below!=ECHELLE) || (APS!=ECHELLE))) 
-	{
-		if ((bonhomme==BONHOMMEDROITE)||(bonhomme==BONHOMMESAUT)) 
-			{
-				bonhomme=BONHOMMEGAUCHE;
-				a=0; a1=-1;
-			}
-			else a=-1; 
-	}
-	if ((touche=='A') && ((what_above==ECHELLE) || (APS==ECHELLE))) 
-	{
-		b=-1; bonhomme=BONHOMMESAUT; a=0;
-	}
-	if ((touche=='Z') && (what_below==ECHELLE)) 
-	{
-		b=1; bonhomme=BONHOMMESAUT; a=0;
-	}
-	if ((touche==' ')&&(bonhomme!=BONHOMMESAUT)) {
-		saut_3eme();
-		goto L_ascenseurs;
-	}
-	if (touche=='P') get();	
-    
-	plot(x,y,APS);
-	x+=a; y+=b; 	
-	if ((y==5) && (x<15)) {x=15;}
-	else {if ((a+b)!=0) APS=scrn(x,y);}
-	if (a!=0) a1=a;
-	a=0; b=0;
-	
-	*/
-	st=scrn(x,y);
-	if ((st==PARAPLUIE) || (st==CHAPEAU) || (st==SAC)) chap_par_sac();
-	if ((st==FEU) || (st==POUTRE)) 
-		goto L_perte;
+
 L5900:
 	plot(x,y,bonhomme);
 	st=scrn(x,y+1);
-	//bonhomme ecrase entre ascenceur et "plafond"
+	//bonhomme ecrasé entre ascenceur et "plafond"
 	if (scrn(x,y-1)==STRUCTLIFT) goto L_perte; 
 	if ((st==VIDE) || (st<7)) goto L_Chute;
 	
@@ -1111,87 +931,32 @@ L5900:
 		goto tableau4;
 	}
 		
-	goto L_ascenseurs;
+	goto LDebut3;
 
 // *** TABLEAU 4 ***
 tableau4:
 	doke(0x0276,INITTIMER);
 	tableaunum=4;
-	how_high();
-	cls();
+	how_high();	
 	timer1=INITTIMER; timer2=TEMPO4/level;
-	
+	anim_event=1;
+	bonus_event=1;
 	timer_feu=INITTIMER;
 	
 	saute=0;
 	saut_autorise=1;
-	anim_event=1;
-	bonus_event=1;	
-	bonus=30;
+	bonus=30;	
 	np=0;
-	
-	
-	/* affichage_data();
-	
-	ink(3);
-	plot(1,0,A_FWWHITE);
-	plot(33,3,BONHOMMEDROITE);
-	
-	plots(12,6,"cccccccccccccx");
-	plots(9,10,"cccgcccccccccccgccc");
-	plots(8,14,"ccccgcccccccccccgcccc");
-	plots(7,18,"cccccgcccccccccccgccccc");
-	plots(6,22,"ccccccgcccccccccccgcccccc");
-	
-	memset((unsigned char*)49085, 'c', 27);
-	plot(32,26,CABLE);
-	for (i=6;i<=26;i+=4) plot(1,i,A_FWBLUE);
-	plot(1,5,A_FWMAGENTA);
-	plot(17,5,PRINCESSE);
-	for (i=7;i<=9;i++){
-		plot(1,i,A_FWRED);
-		plot(14,i,CABLE); 
-		plot(23,i,CABLE);
-	}
-	plots(17,9,DKBOT);
-	plots(17,8,DKTOP);
-	for (i=10;i<=13;i++){
-		plot(9,i,ECHELLE);
-		plot(13,i,ECHELLE);
-		plot(23,i,ECHELLE);
-		plot(27,i,ECHELLE);
-	}
-	for (i=14;i<=17;i++){
-		plot(8,i,ECHELLE);
-		plot(18,i,ECHELLE);
-		plot(28,i,ECHELLE);
-	}
-	for (i=18;i<=21;i++){
-		plot(7,i,ECHELLE);
-		plot(14,i,ECHELLE);
-		plot(22,i,ECHELLE);
-		plot(29,i,ECHELLE);
-	}
-	for (i=22;i<=25;i++){
-		plot(6,i,ECHELLE);
-		plot(18,i,ECHELLE);
-		plot(30,i,ECHELLE);
-	}
-	plot(9,9,PARAPLUIE);
-	plot(22,25,SAC);
-	plot(27,21,CHAPEAU);
-	
-	plot(34,13,A_STD2H); plots(35,13,"500");
-	plot(34,14,A_STD2H); plots(35,14,"500"); */
-	
+	x=12; y=25;	APS=VIDE; a1=1;
+	bonhomme=BONHOMMEDROITE;	
+	plot(x,y,bonhomme);
 	file_unpack((unsigned char*)48000,screen4);
     plots(35,3,itoa(vies));
-	x=12; y=25;	APS=VIDE; a1=1;
-	for (i=0;i<4;i++) ABSS[i]=VIDE;
+	memset(&ABSS,VIDE,4);	
+    memset(&xa2,21,4);
+	memset(&dirfeu,1,4);
 	ya2[0]=9; ya2[1]=13; ya2[2]=17; ya2[3]=21;
-	bonhomme=BONHOMMEDROITE;
-	plot(x,y,bonhomme);
-	for (i=0;i<NBREFEUX;i++) xa2[i]=21;
+	
 LDebut4:
 	//*** ACTION ***
 	timerg=deek(0x0276);
@@ -1216,54 +981,60 @@ LDebut4:
 	} 
 	
 	if (saute!=1) plot(x,y,bonhomme);
-	if (saute==1){
+	else
+	{
 	   if(anim_event==1) {
 		   rr=fin_saut();
 		   if (rr==OUCH) goto L_perte;
 		   if (rr==ENDLEVEL) goto L_fin;
 	   }
-	   goto Laction4;
+	   goto LDebut4;
 	}
 	if (score==0) plots(22,0,"0     ");	
 	else {gotoxy(22,1); printf("%d00 ",score);}
+	
 	touche_action();
+	
 Laction4:
 	if(anim_event==1) 
 	{
+		saut_autorise=1;
 		c+=1;
-		if (c==8) {
+		if (c==8) 
+		{
 			c=0;
 			if (affichage_bonus()==PERDU) goto L_perte;
 		}
 	}
 	//collisions joueur
-	s=scrn(x,y);
-	if ((s==PARAPLUIE) || (s==CHAPEAU) || (s==SAC)) chap_par_sac();
+	if ((APS==PARAPLUIE) || (APS==CHAPEAU) || (APS==SAC)) chap_par_sac();
 	sd=scrn(x,y+1);
 	if (sd==VIDE) goto L_Chute;
 	if (sd==RIVET) {
 		if(enleve_rivet()==ENDLEVEL) goto L_fin;
 	}
-	if ((s==FEU)||(s=='m')||(s=='o'))  goto L_perte;
-	plot(x,y,bonhomme);
+	if ((APS==FEU)||(APS=='m')||(APS=='o'))  goto L_perte;
 	// *** B.FEUX ***
 	if(anim_event==1) 
 	{
+		saut_autorise=1;
+		
 		for (i=0;i<NBREFEUX;i++){
 			xxa=&xa2[i];
 			yya=&ya2[i];
-			s=rnd(2);
-			if (s==0) s=-1;
+			dfeu=dirfeu[i];
+			if(rnd(3)==0) dfeu=-dfeu;
 			plot(*xxa,*yya,ABSS[i]);
-			*xxa=*xxa+s;
+			*xxa=*xxa+dfeu;
 			if (scrn(*xxa,*yya+1)==VIDE){
-				*xxa=*xxa-s;
-				goto L11260;
+				dfeu=-dfeu;
+				*xxa=*xxa+dfeu;
 			}
+			 
 			ABSS[i]=scrn(*xxa,*yya);
 			if ((ABSS[i]==BONHOMMEDROITE) || (ABSS[i]==BONHOMMEGAUCHE)) goto L_perte;
 			
-			L11260:
+			dirfeu[i]=dfeu;
 			plot(*xxa,*yya,FEU);
 		}
 	}
@@ -1309,9 +1080,9 @@ L_fin:
 		wait(20);
 	}
 	explode();
-	//bonhomme ecrase
+	//bonhomme ecrasé
 	if (APS=='c') goto L_perte;
-	
+	plot(x,y,APS);
 	plot(20,5,BONHOMMEGAUCHE);
 	plot(16,3,A_FWRED); plot(17,3,A_STD2HFL); plots(18,3,"sz");plot(21,3,A_STD);
 	plot(16,4,A_FWRED); plot(17,4,A_STD2HFL); plots(18,4,"sz");
@@ -1364,13 +1135,10 @@ void tonneau_descend()
 {
 	plot(*xxt,*yyt,*oot);
 	noot=scrn(*xxt,*yyt+4);
-	if (!((noot>=TONNEAU1)&&(noot<=TONNEAU4)))
-	{
-		*yyt+=4;
-		*ant+=*aat;
-		if (*ant>TONNEAU4) *ant=TONNEAU1;
-		if (*ant<TONNEAU1) *ant=TONNEAU4;
-	} 	
+	*yyt+=4;
+	*ant+=*aat;
+	if (*ant>TONNEAU4) *ant=TONNEAU1;
+	if (*ant<TONNEAU1) *ant=TONNEAU4;	 	
 	*oot=scrn(*xxt,*yyt);
 }
 
@@ -1391,8 +1159,6 @@ char affichage_bonus()
 
 void how_high()
 {
-	poke(0x24e,32);
-	poke(0x24f,4);
 	cls(); ink(1);
 	i=15;
 	play(7,0,0,0);
@@ -1419,30 +1185,32 @@ void how_high()
 	plot(7,25,A_FWWHITE);
     plots(8,25,"PRESS ANY KEY TO SKIP");
 #endif 
-    if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
+    if (peek(0x208)!=56) goto L_skip;
 	wait(30);
 	music(1,4,2,7); wait(50);
-	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
+	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,7,7); wait(25);
-	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
+	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,6,7); wait(50);
-	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
+	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,9,7); wait(25);
-	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
+	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,7,7); wait(25);
-	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
+	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,11,7); wait(30);
-	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
+	if (peek(0x208)!=56) goto L_skip;
 	music(1,5,2,7); wait(55);
-	if (peek(0x208)!=56) {play(0,0,0,0); ping(); return;};
+	if (peek(0x208)!=56) goto L_skip;
 	play(0,0,0,0);
-	for(i==0;i<=6;i++){
-		if (peek(0x208)!=56) {play(0,0,0,0); ping; return;};
-		wait(50);
-	}
+	if (peek(0x208)!=56) goto L_skip;
+	wait(50);
+L_skip:
+    play(0,0,0,0);
 	ping();
 	
-	//fast keyboard tempo (prepare keyboard for game mode)
+	//empty keyboard buffer;
+	poke(0x2df,0);
+	//fast keyboard tempo (prepare keyboard for game mode)	
 	poke(0x24e,TEMPO_KB);
 	poke(0x24f,TEMPO_KB);
 }
@@ -1475,21 +1243,6 @@ void son1()
 	for (i=40;i<=60;i++) sound(1,i,8);
 	play(0,0,0,0);
 }
- 
- /*void affichage_data()
-{ 
-	cls(); ink(7);
-	plots(2,-1,"BONUS:");
-	plots(20,-1,"SCORE:");
-	plots(33,0,"L=");
-	plots(35,0,itoa(level));
-	if (bonus==0) plots(2,0,"0        ");	
-	else {gotoxy(2,1); printf("%d00 ",bonus);}
-	if (score==0) plots(20,0,"0        ");	
-	else {gotoxy(20,1); printf("%d00 ",score);}
-	plot(33,13,0); 
-	plot(33,14,0);
-}*/
 
 void chap_par_sac()
 {
@@ -1501,8 +1254,7 @@ void chap_par_sac()
 	score+=5;
 	timerbonus=timerg-TEMPOB;
 	bonus_event=1;
-	APS=VIDE;
-	if ((tableaunum==3) && (st==CHAPEAU)){
+	if ((tableaunum==3) && (APS==CHAPEAU)){
 		for (i=11;i<=13;i++) {
 			plot(20,i,ECHELLE);
 			wait(20);
@@ -1513,6 +1265,13 @@ void chap_par_sac()
 			wait(20);
 		}
 	}
+	if ((tableaunum==2) && (APS==CHAPEAU)){
+		plot(20,7,ECHELLE);
+		plot(7,10,ECHELLE);
+		plot(28,10,ECHELLE);
+		wait(20);
+	}
+	APS=VIDE;
 }
 
 void animation_feu()
@@ -1527,35 +1286,37 @@ poke(47013,spritefeu47013[animfeu]);
 }
 
 char touche_action()
- { 
-    touche=key();
-	//touche=peek(0x208);
+{ 
+	touche=key();
+	
 	switch(touche)
 	{
-		case 0://0 / 56:		
+		case 0:		
 			return 0;
 			break;
-		case ' '://' ' / 132:
+		case ' ':
+			plot(x,y,APS);
 		    if ((bonhomme!=BONHOMMESAUT) && (saut_autorise==1)) {
 				if (tableaunum!=3){
-					saut_autorise=0;
+					saut_autorise=0;					
 					saut();
 				}
 			}
 			return ' ';
 			break;
-		case 'P'://'P' /157:
+		case 'P':
 		    saut_autorise=1;
+			poke(0x2df,0);
 			get();
 			return 'P';
 			break;
 	}
 	saut_autorise=1;
 	what_below=scrn(x,y+1);what_above=scrn(x,y-1);
-	plot(x,y,APS);
+	
 	switch(touche)
 	{
-		case 'L'://143 'L':
+		case 'L':
 		    if ((what_below!=ECHELLE) || (APS!=ECHELLE))
 			{
 		    if ((bonhomme==BONHOMMEGAUCHE)||(bonhomme==BONHOMMESAUT))
@@ -1566,7 +1327,7 @@ char touche_action()
 				else a=1; 
 			}
 			break;
-		case 'K'://'K' 131:
+		case 'K':
 		    if ((what_below!=ECHELLE) || (APS!=ECHELLE))
 			{
 		    if ((bonhomme==BONHOMMEDROITE)||(bonhomme==BONHOMMESAUT)) 
@@ -1577,28 +1338,32 @@ char touche_action()
 				else a=-1;
 			}
 			break;
-		case 'A': //'A' 174:
-			if ((what_above==ECHELLE) || (APS==ECHELLE))
+		case 'A': 
+			if (((what_above==ECHELLE)||(APS==ECHELLE))
+				&&(what_above!=SOL)&&(what_above!=SOL2))
 			{
 				b=-1; bonhomme=BONHOMMESAUT; a=0;
-			}
-			//b=-4; 
+			} 
 			break;
-		case 'Z':  //'Z' 170:
-			if (what_below==ECHELLE)
+		case 'Z':
+			if ((what_below==ECHELLE))
 			{
 				b=1; bonhomme=BONHOMMESAUT; a=0;
 			}
-			//b=4;
 			break;
 	}
-	x=x+a; y=y+b; 
+	if ((a!=0)||(b!=0))  
 	if ((tableaunum==3) && (y==5) && (x<15)) x=15;
-	else if ((a+b)!=0) APS=scrn(x,y);
+	else if ((a!=0)||(b!=0)) {
+		plot(x,y,APS);
+		x=x+a; y=y+b;
+		APS=scrn(x,y);	
+        plot(x,y,bonhomme);		
+	}
 	if (a!=0) a1=a;
 	a=0; b=0;
 	return touche;
- }
+}
  
 void saut_3eme()
 {
@@ -1666,10 +1431,6 @@ char fin_saut()
 	plot(x+a1,y-1,ASS); 
 	x=x+2*a1;
 	s=scrn(x,y);
-	//************
-	//APS=scrn(x,y);
-	//plot(x,y,bonhomme);
-	//************
 	if ((s==GATEAU) || (s==FEU) || ((s>=TONNEAU1)&&(s<=TONNEAU4))) return OUCH;
  	
 	if ((s==PARAPLUIE) || (s==CHAPEAU) || (s==SAC)) 
