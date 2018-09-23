@@ -2,34 +2,30 @@
 
 ::
 :: Initial check.
-:: Verify if the SDK is correctly configurated
+:: Verify if the SDK is correctly configurated,
 ::
 IF "%OSDK%"=="" GOTO ErCfg
 
+::
+:: Set the build paremeters
+::
+CALL osdk_config_en.bat
 
 ::
-:: Set the build parameters
+:: Run the emulator using the common batch
 ::
-CALL osdk_config.bat
-
-
-::
-:: Launch the compilation of files
-::
-CALL %OSDK%\bin\make.bat %OSDKFILE%
+CALL %OSDK%\bin\execute.bat
 GOTO End
 
-
 ::
-:: Outputs an error message
+:: Outputs an error message about configuration
 ::
 :ErCfg
 ECHO == ERROR ==
 ECHO The Oric SDK was not configured properly
 ECHO You should have a OSDK environment variable setted to the location of the SDK
+ECHO ===========
 IF "%OSDKBRIEF%"=="" PAUSE
 GOTO End
 
-
 :End
-
