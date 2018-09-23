@@ -95,7 +95,8 @@ char anim_event,bonus_event;
 char ch=0,ha=0;
 char st=0,cp=0,l=0;
 char c=0,dp=0,yp=0;
-char iy=0,cb=0,y_poutre=0, x_poutre,an_poutre, xr,what_below=0,what_above=0;
+char iy=0,cb=0,y_poutre=0, x_poutre,an_poutre, xr;
+char what_below=0,what_above=0;
 char sb=0, sd=0, in=0,zx=0;
 char rr=0,np=0,s=0,co=0,yb=0,xb=0,dfeu=0;
 char opendoor; //cl=0, 
@@ -693,24 +694,32 @@ LDebut2:
 	if (score==0) plots(20,0,"0        ");	
 	else {gotoxy(20,1); printf("%d00 ",score);}
 	
-	touche_action();	
-	
-Laction2:
+	touche_action();
+
     if(anim_event==1) 
 	{
 		saut_autorise=1;
 		//bonhomme sur le tapis
 		if ((y==21) && (iy==1)) {
-			plot(x,y,VIDE); x+=1; iy=0 ; goto Laction2;
+			plot(x,y,VIDE); x+=1; 
+			iy=0 ; goto Laction2;			
 		}
 		if ((y==13) && (x>18)){
-			plot(x,y,VIDE); x-=1; iy=0 ; goto Laction2;
+			
+			plot(x,y,VIDE); x-=1; 
+			APS=scrn(x,y);
+			iy=0 ; goto Laction2;
 		}
 		if ((y==13) && (x<17)){
-			plot(x,y,VIDE); x+=1;
+			plot(x,y,VIDE);
+			APS=scrn(x,y);			
+			x+=1;
 		}
 		iy=1;
-	} 
+	} 	
+	
+Laction2:
+    
 	//collisions joueur
 	if ((APS==PARAPLUIE)||(APS==CHAPEAU)||(APS==SAC)) chap_par_sac();
 	if (y==6){
