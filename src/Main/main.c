@@ -95,7 +95,7 @@ char anim_event,bonus_event;
 char ch=0,ha=0;
 char st=0,cp=0,l=0;
 char c=0,dp=0,yp=0;
-char iy=0,cb=0,y_poutre=0, x_poutre,an_poutre, xr,what_below=0;what_above=0;
+char iy=0,cb=0,y_poutre=0, x_poutre,an_poutre, xr,what_below=0,what_above=0;
 char sb=0, sd=0, in=0,zx=0;
 char rr=0,np=0,s=0,co=0,yb=0,xb=0,dfeu=0;
 char opendoor; //cl=0, 
