@@ -23,6 +23,10 @@ Simply use the batch file **make_all.bat**, located in the **.\src** (sources) d
 After a couple of seconds, a new directory, **release**, will appear with two files in it. Those are the file tapes that can be used with an Oric emulator such like Euphoric (DOS) or Oricutron (Windows, Linux, ...).
 One of the file is the english version of the game, the other is the french version.
 
+For the finalization of the final tape, the tool **taptap** is used to disable the autorun of the main program (otherelse the BASIC Loader won't be able to load the main program properly). The final tap file is then built by joining 3 parts : the Loader, the title screen, and the main program.
+**Taptap** Repository is [here](https://github.com/DJChloe/taptap).
+**Taptap** is also available in the OSDK, but is bugged and has less possibilities and options than the one provided here. 
+
 ## Thanks
 I wish to thank some people of the Oric community that helped me in a way or another in elaborating this game, and my kids who encouraged me to do it.
 Those people are credited with their pseudo appearing in the High-scores.
