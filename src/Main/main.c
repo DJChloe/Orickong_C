@@ -754,9 +754,7 @@ Laction2:
 		poke(ADDR1TAPIS2,spritetapis[2-animtapis]);
 		poke(ADDR2TAPIS2,spritetapis[animtapis]); 
 		animtapis+=1;
-		if(animtapis>2) animtapis=0;
-		
-		//plot(x,y,bonhomme);
+		if(animtapis>2) animtapis=0;		
 	}
 	goto LDebut2;
 
@@ -1176,37 +1174,20 @@ void how_high()
 	plot(1,22,ch);
 #ifdef __FRENCH__
 	plots(9,22,MSGHH);
-	plot(7,24,A_FWWHITE);plot(7,25,A_FWWHITE);plot(7,26,A_FWWHITE);
-	plots(14,24,"APPUYEZ SUR");
-	plots(8,25,"N'IMPORTE QUELLE TOUCHE");
-	plots(14,26,"POUR PASSER");
 #else	
 	plots(8,22,MSGHH);
-	plot(7,25,A_FWWHITE);
-    plots(8,25,"PRESS ANY KEY TO SKIP");
 #endif 
-    if (peek(0x208)!=56) goto L_skip;
 	wait(30);
 	music(1,4,2,7); wait(50);
-	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,7,7); wait(25);
-	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,6,7); wait(50);
-	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,9,7); wait(25);
-	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,7,7); wait(25);
-	if (peek(0x208)!=56) goto L_skip;
 	music(1,4,11,7); wait(30);
-	if (peek(0x208)!=56) goto L_skip;
 	music(1,5,2,7); wait(55);
-	if (peek(0x208)!=56) goto L_skip;
 	play(0,0,0,0);
-	if (peek(0x208)!=56) goto L_skip;
 	wait(50);
-L_skip:
-    play(0,0,0,0);
-	ping();
+ping();
 	
 	//empty keyboard buffer;
 	poke(0x2df,0);
