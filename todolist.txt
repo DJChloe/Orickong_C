@@ -1,2 +1,0 @@
- - grab free bytes
- - animate little hero running

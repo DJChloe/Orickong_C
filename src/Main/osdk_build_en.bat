@@ -9,7 +9,7 @@ IF "%OSDK%"=="" GOTO ErCfg
 
 
 ::
-:: Set the build paremeters
+:: Set the build parameters
 ::
 CALL osdk_config_en.bat
 
@@ -32,6 +32,6 @@ ECHO The Oric SDK was not configured properly
 ECHO You should have a OSDK environment variable setted to the location of the SDK
 IF "%OSDKBRIEF%"=="" PAUSE
 GOTO End
-
+pause
 
 :End

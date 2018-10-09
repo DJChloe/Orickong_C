@@ -44,3 +44,6 @@ Special thanks to :
 * Iss, for, well... I don't remember for what, but he noticed me that Oricutron was from Xeron. And many thanks to his support. 
 * My sons (Hugo, Tom and Eliot) for their support.
 * Github for hosting the project.
+
+## LICENCE
+GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007

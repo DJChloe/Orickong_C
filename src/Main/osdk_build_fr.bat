@@ -9,7 +9,7 @@ IF "%OSDK%"=="" GOTO ErCfg
 
 
 ::
-:: Set the build paremeters
+:: Set the build parameters
 ::
 CALL osdk_config_fr.bat
 copy lang_fr.h lang.h

@@ -6,6 +6,6 @@
 SET OSDKADDR=$600
 SET OSDKNAME=main_en
 SET OSDKTAPNAME=main
-SET OSDKFILE=main
+SET OSDKFILE=main metalcrushfx
 
 
