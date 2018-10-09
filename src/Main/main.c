@@ -406,7 +406,7 @@ L_Presentation:
 	score=0;
 	
  //for testing
- goto tableau4;
+ //goto tableau4;
 
  // *** TABLEAU 1 ***
  tableau1:
