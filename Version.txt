@@ -1,1 +1,1 @@
-Final release v1.0
+Final release v1.1 high score fix

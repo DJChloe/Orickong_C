@@ -321,7 +321,7 @@ unsigned char welcome[309]=
 };
 #endif 
 
-unsigned int hs[7]={60,50,30,20,21,10,1};
+unsigned int hs[7]={60,50,30,20,15,10,1};
 char HSS[7][16]=
 {
 	"LADYWASKY",
